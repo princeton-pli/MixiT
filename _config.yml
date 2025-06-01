@@ -1,0 +1,17 @@
+title: Project Name
+description: Project Description
+code: https://github.com # GitHub link here
+paper: https://princeton-nlp.github.io/ # arXiv Link here
+twitter:
+    username: princeton_nlp
+    title_image: https://avatars.githubusercontent.com/u/44678448?s=280&v=4
+authors:
+    - name: Sanjeev Arora
+      link: https://www.cs.princeton.edu/~arora/
+      pic: https://princeton-nlp.github.io/assets/images/people/sanjeev-photo.jpg # Can be relative route to image in `assets/static/` (sub)folder
+    - name: Danqi Chen
+      link: https://www.cs.princeton.edu/~danqic/
+      pic: https://princeton-nlp.github.io/assets/images/people/danqi-photo.jpg
+    - name: Karthik Narasimhan
+      link: https://www.cs.princeton.edu/~karthikn/
+      pic: https://princeton-nlp.github.io/assets/images/people/karthik-photo.jpg
