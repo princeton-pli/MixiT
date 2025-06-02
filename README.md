@@ -10,6 +10,7 @@ Our work disentangles the different trainable components with respect to differe
 Our work takes a principled approch towards randomly initializing the frozen weights.
     
 > **[Paper](arxiv.org/)**
+
 ![Architecture overview](models_diagram.pdf)
     
 ## 🚀 Setup
@@ -37,30 +38,30 @@ python trainer.py --task wikitext --output_dir results --cache_dir /tmp/hf_cache
 
 Yelp sentiment classification:
 ```
-    python trainer_classifier.py --task yelp_polarity --output_dir results --cache_dir /tmp/hf_cache --max_seq_len 256 --max_steps=3000 --shaped_attention=mixing --eval_steps 1000 --logging_steps=1000 --n_embd=1024 --n_head=16 --learning_rate=5e-4 --model_name_or_path=llama --llama3=True
-    ```
+python trainer_classifier.py --task yelp_polarity --output_dir results --cache_dir /tmp/hf_cache --max_seq_len 256 --max_steps=3000 --shaped_attention=mixing --eval_steps 1000 --logging_steps=1000 --n_embd=1024 --n_head=16 --learning_rate=5e-4 --model_name_or_path=llama --llama3=True
+```
 
 Algorithmic tasks:
 ```
-    python depth.py --task=additionstream_10 --max_steps=500 --eval_steps=100 --logging_steps=100 --weight_frozen=1 --n_layer=2 --shaped_attention=mixing --n_embd=512 --n_head=4
-    ```
+python depth.py --task=additionstream_10 --max_steps=500 --eval_steps=100 --logging_steps=100 --weight_frozen=1 --n_layer=2 --shaped_attention=mixing --n_embd=512 --n_head=4
+```
     
 We also provide scripts for launching experiments on slurm. For instance:
 
 Language modeling:    
 ```
-    shaped_attention=mixing llama3=True model_name_or_path=llama n_layer=12 max_steps=80000 max_seq_len=256 n_embd=512 n_head=8 per_device_train_batch_size=128 job_hours=24 n_gpu=4 learning_rate=5e-4 task=wikitext scripts/run_train.sh
-    ```
+shaped_attention=mixing llama3=True model_name_or_path=llama n_layer=12 max_steps=80000 max_seq_len=256 n_embd=512 n_head=8 per_device_train_batch_size=128 job_hours=24 n_gpu=4 learning_rate=5e-4 task=wikitext scripts/run_train.sh
+```
 
 Yelp sentiment classification:
 ```
-    shaped_attention=vanilla master_port=29501 llama3=True model_name_or_path=llama n_layer=4 max_steps=10000 max_seq_len=256 n_embd=512 n_head=8 per_device_train_batch_size=128 job_hours=12 n_gpu=2 learning_rate=8e-4 postfix=alpha task=yelp_polarity activation_cminus=-1 weight_decay=0.07 scripts/run_train_classifier.sh
-    ```
+shaped_attention=vanilla master_port=29501 llama3=True model_name_or_path=llama n_layer=4 max_steps=10000 max_seq_len=256 n_embd=512 n_head=8 per_device_train_batch_size=128 job_hours=12 n_gpu=2 learning_rate=8e-4 postfix=alpha task=yelp_polarity activation_cminus=-1 weight_decay=0.07 scripts/run_train_classifier.sh
+```
 
 Algorithmic tasks:
 ```
-    shaped_attention=mixing weight_frozen=0 llama3=True model_name_or_path=llama n_layer=2 eval_steps=1000 logging_steps=1000 max_steps=300 max_seq_len=256 n_embd=512 n_head=8 per_device_train_batch_size=256 learning_rate=5e-4 task=dyckstream_40 scripts/run_depth_array.sh
-    ```
+shaped_attention=mixing weight_frozen=0 llama3=True model_name_or_path=llama n_layer=2 eval_steps=1000 logging_steps=1000 max_steps=300 max_seq_len=256 n_embd=512 n_head=8 per_device_train_batch_size=256 learning_rate=5e-4 task=dyckstream_40 scripts/run_depth_array.sh
+```
     
 More command line arguments can be found in [utils.py](utils.py).
 

@@ -5,12 +5,10 @@ import logging
 import sys
 
 import numpy as np
-# import streaming
 import torch
 import torch.distributed as dist
 from torch.nn.parallel import DistributedDataParallel as DDP
 
-# import datasets
 import transformers
 from transformers import (
     AutoConfig,
@@ -160,7 +158,6 @@ def get_train_dataloader_for_streaming(self):
 
 
     self.train_dataloader._get_batch_size = _get_batch_size.__get__(self.train_dataloader, streaming.StreamingDataLoader)
-    # breakpoint()
 
     assert self.train_dataset.replication is None, "Currently the dataset resuming on replication is not tested!"
 
@@ -284,7 +281,6 @@ class EvalCallback(transformers.trainer_callback.TrainerCallback):
         
     def on_evaluate(self, args, state, control, metrics=None, **kwargs):
         # metrics = self.trainer.evaluate()
-        # breakpoint()
         _add_model_perplexity(metrics)
         logger.warning(metrics)
         # print(metrics)
@@ -369,7 +365,6 @@ def main():
         padding="max_length",
         # use_fast=args.use_fast_tokenizer,
     )
-    # breakpoint()
     # tokenizer.add_special_tokens({'pad_token': '[PAD]'})
     # model.resize_token_embeddings(len(tokenizer))
     tokenizer.pad_token = tokenizer.eos_token
