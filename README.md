@@ -11,7 +11,7 @@ Our work takes a principled approch towards randomly initializing the frozen wei
     
 > **[Paper](arxiv.org/)**
 
-![Architecture overview](models_diagram.pdf)
+![Architecture overview](models_diagram.svg)
     
 ## 🚀 Setup
 
