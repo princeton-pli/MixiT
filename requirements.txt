@@ -1,0 +1,6 @@
+datasets>=3.0.0 
+transformers>=4.50.0
+numpy>=1.23.5
+tokenizers>=0.21.0 
+torch>=2.4.1 
+wandb>=0.17.9
