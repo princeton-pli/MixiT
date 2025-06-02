@@ -1,61 +1,63 @@
-# Project Site Template
+# Attention Retrieves, MLP Memorizes: Disentangling Trainable Components in the Transformer
 
-Github Pages template for project landing page.
+What roles do different components of the Transformer play?
 
-*This template is based on the [Cayman theme](https://github.com/pages-themes/cayman) template, a Jekyll theme for GitHub Pages.*
+Our work disentangles the different trainable components with respect to different tasks, and finds that:
+* A Transformer model with *random query and weight projectors*, frozen at initialization, can perform competitively on language modeling tasks. 
+* MLPs play a crucial role in memorization, whereas attention is crucial for forming specialized circuits such as induction heads, enabling tasks such as retrieval. MLPs and attention collaborate on memorization tasks.
+* Even a model with a *completely random attention scores matrix*, can solve certain algorithmic and reasoning tasks.
+
+Our work takes a principled approch towards randomly initializing the frozen weights.
+    
+> **[Paper](arxiv.org/)**
 
 ## 🚀 Setup
-> **Note**: This site requires [Ruby](https://www.ruby-lang.org/). To check if you have Ruby already installed, run `ruby -v` in your terminal. If it is not, follow these [instructions](https://www.ruby-lang.org/en/documentation/installation/).
 
-To preview the theme locally and populate the template with your project information:
 1. Clone this repository
 ```
-git clone https://github.com/princeton-nlp/project-page-template
+git clone https://github.com/princeton-pli/MixiT
 ```
-2. `cd` into the theme's directory
+2. `cd` into the `MixiT` directory
 3. Run `./setup` to install the necessary dependencies
-4. Run `bundle exec jekyll serve` to start the preview server
-5. Visit [`localhost:4000`](http://localhost:4000) in your browser to preview the theme
 
 ## 🛠️ Usage
-Updating this template to describe your project can be done in three files:
-* The **contents** of the webpage can be edited in the `index.md` file.
-* The **layout** of the webpage can be modified in the `_layouts/default.html` file.
-* The **header** + **metadata** of the webpage can be configured in the `_config.yml` file.
+    
+The code is designed to be modular and scalable, allowing for fast and efficient distributed training.
+Both 
 
-> **Tip**: Check out an example - the DataMUX project [page](https://princeton-nlp.github.io/DataMUX/) + [code](https://github.com/princeton-nlp/DataMUX/tree/website)!
+Note that the code for the algorithmic tasks is based on previous work on the (random transformer)[https://github.com/fjzzq2002/random_transformers/tree/main], but with more systematized runner scripts and some fixes.
 
-To maintain consistency in styling across all project sites, modifying the CSS is discouraged. With that said, if you would like to, you can modify styling within the `/_sass` folder. The `variables.scss` variables defines the colors used for the webpage entities (i.e. headers, text, code block coloring), and these variables are used in the `pnlp-theme.scss` file. The other `.scss` files not mentioned here control the appearance + organization of elements of the page.
 
-## 🚢 Deployment
-Once you run `bundle exec jekyll serve`, a `_site` folder is created, which contains the generated HTML + CSS code that is your website. To deploy this code either anonymously or publicly, follow one of the set of deployment steps below.
+To launch experiments in various settings, either algorithmic or language modeling experiments, we can use commands such as the following:
+    
+Language modeling:
+```python trainer.py --task wikitext --output_dir results --cache_dir /tmp/hf_cache --max_seq_len 256 --max_steps=20000 --shaped_attention=mixing --eval_steps 400 --logging_steps=400 --n_layer=12 --n_embd=512 --n_head=8 --learning_rate=5e-4 --model_name_or_path llama --llama3=True```
 
-### 👋 Public Release
-If you are deploying *publicly*, it is recommended to deploy your site under the `princeton-nlp.github.io` domain (i.e. `princeton-nlp.github.io/DataMUX`). To do so, please do the following:
-* Push your desired changes to the GitHub repository for your project page
-* Click "Settings" to navigate to the repository settings
-* In the "Code and automation" section of the sidebar, click "Pages"
-* Under **Source**, select the dropdown menu to choose which branch to use as the source of your web page
-* Select "Save" to build the webpage and host it a the default princeton-nlp.github.io/project-name domain
-* If you'd like to use a custom domain name, see the [GitHub Pages Docs](https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site) for more help
+Yelp sentiment classification:
+```python trainer_classifier.py --task yelp_polarity --output_dir results --cache_dir /tmp/hf_cache --max_seq_len 256 --max_steps=3000 --shaped_attention=mixing --eval_steps 1000 --logging_steps=1000 --n_embd=1024 --n_head=16 --learning_rate=5e-4  --model_name_or_path=llama --llama3=True```
 
-### 👤 Anonymouse Release
-If you are deploying *anonymously*, it is recommended to deploy your site under a `.github.io`  page of an anonymous Github organization. To do so, please do the following:
-* Navigate to the [organizations](https://github.com/settings/organizations) page
-* Click `New Organization` on the top right
-* Select the `Free` tier (click the `Create a free organization` button)
-* Fill in the fields to setup the organization. Make sure none of the information you put down directly references Princeton NLP.
-* You can fill in or skip through the organization set up information - it is not important
-* Click the `Create a new repository` button and name it `<organization name>.github.io` (it must be a public repository for the page to be visible)
+Algorithmic tasks:
+```python depth.py --task=additionstream_10 --max_steps=500 --eval_steps=100 --logging_steps=100 --weight_frozen=1 --n_layer=2 --shaped_attention=mixing --n_embd=512 --n_head=4```
+    
+We also provide scripts for launching experiments on slurm. For instance:
 
-You can now deploy your website code to `<organization name>.github.io`. To ensure anonymity, go through the following checklist:
-- [ ] Remove the `authors` and `citation` section from `index.md`
-- [ ] Change the header gradient colors (`$header-bg-color`, `$header-bg-color-secondary`) and text header color (`$section-heading-color`) in the `_sass/variables.scss` file to a non-Princeton color scheme.
-- [ ] Copy + paste the organization URL in an incognito tab. Check that your GitHub account is not publicly associated with the organization
+Language modeling:    
+```shaped_attention=mixing llama3=True model_name_or_path=llama n_layer=12 max_steps=80000 max_seq_len=256 n_embd=512 n_head=8 per_device_train_batch_size=128 job_hours=24 n_gpu=4 learning_rate=5e-4 task=wikitext scripts/run_train.sh```
 
-## 📜 Resources
-This website template renders Markdown in a HTML + CSS template using [Jekyll](https://jekyllrb.com/), a static site generator written in Ruby. The following are resources that would be helpful for editing the webpage content (`index.md`) or modifying the HTML template (`_layouts/default.html`) for your needs.
+Yelp sentiment classification:
+```shaped_attention=vanilla master_port=29501 llama3=True model_name_or_path=llama n_layer=4 max_steps=10000 max_seq_len=256 n_embd=512 n_head=8 per_device_train_batch_size=128 job_hours=12 n_gpu=2 learning_rate=8e-4 postfix=alpha task=yelp_polarity activation_cminus=-1 weight_decay=0.07 scripts/run_train_classifier.sh```
 
-* [Markdown Cheat Sheet](https://www.markdownguide.org/basic-syntax/)
-* [Jekyll variables documentation](https://jekyllrb.com/docs/variables/)
-* [Cayman theme](https://github.com/pages-themes/cayman)
+Algorithmic tasks:
+```shaped_attention=mixing weight_frozen=0 llama3=True model_name_or_path=llama n_layer=2 eval_steps=1000 logging_steps=1000 max_steps=300 max_seq_len=256 n_embd=512 n_head=8 per_device_train_batch_size=256 learning_rate=5e-4 task=dyckstream_40 ./run_depth_array.sh```
+    
+
+
+### 👋 Citation
+```
+@article{mixit2025,
+  title={Attention Retrieves, MLP Memorizes: Disentangling Trainable Components in the Transformer},
+  author={Dong, Yihe and Noci, Lorenzo and Khodak, Mikhail and Li, Mufan},
+  journal={arXiv preprint arXiv:2205.},
+  year={2025}
+}
+```
