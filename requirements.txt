@@ -1,5 +1,7 @@
+accelerate>=0.26.0
 datasets>=3.0.0 
 transformers>=4.50.0
+matplotlib>=3.9.2
 numpy>=1.23.5
 tokenizers>=0.21.0 
 torch>=2.4.1 

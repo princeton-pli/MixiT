@@ -9,7 +9,7 @@ Our work disentangles the different trainable components with respect to differe
 
 Our work takes a principled approch towards randomly initializing the frozen weights.
     
-> **[Paper](arxiv.org/)**
+> **[Paper](https://arxiv.org/pdf/2506.01115)**
 
 ![Architecture overview](models_diagram.svg)
     
@@ -26,7 +26,7 @@ git clone https://github.com/princeton-pli/MixiT
     
 The code is designed to be modular and scalable, allowing for fast and efficient distributed training.
 
-Note that the code for the algorithmic tasks is based on previous work on the [random transformer](https://github.com/fjzzq2002/random_transformers/tree/main), but with more systematized runner scripts and some fixes.
+Note that the code for the algorithmic tasks is based on previous work on the [random transformer](https://github.com/fjzzq2002/random_transformers/tree/main), but with more systematized runner scripts.
 
 
 To launch experiments in various settings, either algorithmic or language modeling experiments, we can use commands such as the following:
@@ -70,7 +70,7 @@ More command line arguments can be found in [utils.py](utils.py).
 @article{mixit2025,
   title={Attention Retrieves, MLP Memorizes: Disentangling Trainable Components in the Transformer},
   author={Dong, Yihe and Noci, Lorenzo and Khodak, Mikhail and Li, Mufan},
-  journal={arXiv preprint arXiv:2205.},
+  journal={arXiv preprint arXiv:2506.01115},
   year={2025}
 }
 ```

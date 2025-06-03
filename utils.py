@@ -192,9 +192,11 @@ class ScriptArguments:
         metadata={"help": "Domain and proportions for the streaming dataset"}
     )
     streaming_train_root: str = field(
+        default="/scratch/gpfs/PLI/conditional_pretraining/packed",
         metadata={"help": "The root directory of the streaming training dataset."}
     )
     streaming_val_root: str = field(
+        default="/scratch/gpfs/PLI/conditional_pretraining/packed",
         metadata={"help": "The root directory of the streaming validation dataset."}
     )
 

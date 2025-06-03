@@ -19,22 +19,16 @@ from transformers import (
 
 import modeling_gpt2
 import modeling_llama
-import modadd_exp_modular
+
 import utils
 import data_utils
 
 
 logger = logging.getLogger(__name__)
 
-TASK_TO_MODULE = {
-    "modadd": modadd_exp_modular
-}
 
-TASK_TO_DATA_ARGS = {
-    "modadd": {"prime": 199}
-}
 TASK_TO_TRAINER = {
-    "modadd": modadd_exp_modular.CustomTrainer
+    # "modadd": modadd_exp.CustomTrainer
 }
 TASK_TO_TRAINER = collections.defaultdict(lambda : transformers.Trainer, TASK_TO_TRAINER)
 
@@ -403,12 +397,6 @@ def main():
     # if args.half_precision_training:
     #    model = model.to(half_dtype)
 
-    # task_class = TASK_TO_MODULE[task]
-    # data_args = TASK_TO_DATA_ARGS[task]
-
-    # train_dataset, eval_dataset = task_class.get_train_eval_dataset(
-    #    **data_args
-    #)
     train_dataset, eval_dataset = data_utils.get_dataset(
         args.task,
         args=args,
