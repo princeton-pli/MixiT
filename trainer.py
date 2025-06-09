@@ -49,18 +49,6 @@ def register_models(model_name):
         pass
         
 
-def compute_metrics(eval_pred, epsilon=1e-5):
-    """
-    This assumes that the pred have been pre-processed to only include
-    the probability for the ground truth label (for memory saving).
-    """
-    # TODO: some implementations just use perplexity = math.exp(metrics["eval_loss"])?!
-    pred, _ = eval_pred
-    pred = np.clip(pred, min=epsilon)
-    perp = np.mean(np.exp(-np.mean(np.log(pred.squeeze()), axis=-1)))
-    # perp = np.exp(-np.mean(np.log(pred)))
-    return {"perp": perp}
-
 def compute_metrics_torch_perp(eval_pred):
     """This version currently causes OOM due to HF memory leak."""
     pred, labels = eval_pred
@@ -73,7 +61,6 @@ def compute_metrics_torch_perp(eval_pred):
 def preprocess_logits_for_metrics(logits, labels):
     # Logits have shape e.g. [batch, seq_len, vocab_sz]
     labels = labels.unsqueeze(-1)
-    # breakpoint()
     labels_orig = torch.tensor(labels)
     # Padding tokens have label -100
     labels = torch.clip(labels, min=0)
@@ -97,7 +84,6 @@ def tokenize_dataset(dataset, tokenizer, args):
             return_tensors="pt",
         )
         labels = torch.tensor(outputs["input_ids"])
-        # breakpoint()
         # Ignore loss on pad tokens.
         labels[outputs["input_ids"] == tokenizer.pad_token_id] = -100
         model_inputs = {
@@ -444,7 +430,6 @@ def main():
         eval_dataset=eval_dataset, # if training_args.do_eval else None,
         tokenizer=tokenizer,
         # optimizer_cls_and_kwargs=optimizer_cls_and_kwargs,
-        # compute_metrics=compute_metrics,
         # preprocess_logits_for_metrics=preprocess_logits_for_metrics,
         callbacks=[eval_logger],
         **kwargs

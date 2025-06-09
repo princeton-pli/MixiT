@@ -60,9 +60,6 @@ def compute_loss(outputs, labels, **kwargs):
     ## forward pass                                                                                    
     #outputs = model(**inputs)
     logits = outputs.get("logits")
-    # breakpoint()
-    # labels = labels[:,-1]
-    # logits = logits[:,-2]
     loss_fct = torch.nn.CrossEntropyLoss()
     loss = loss_fct(logits, labels)
     return loss
@@ -73,14 +70,10 @@ def compute_metrics(eval_pred):
     This assumes that the pred have been pre-processed to only include
     the probability for the ground truth label (for memory saving).
     """
-    # TODO: some implementations just use perplexity = math.exp(metrics["eval_loss"])?!
     pred, labels = eval_pred
-    # breakpoint()
     pred = np.argmax(pred, -1)
     acc = np.mean(pred == labels)
     
-    # pred = np.clip(pred, min=epsilon)
-    # perp = np.mean(np.exp(-np.mean(np.log(pred.squeeze()), axis=-1)))
     return {"Acc": acc}
 
 def compute_metrics_perp(eval_pred, epsilon=1e-5):
@@ -107,7 +100,6 @@ def compute_metrics_torch_perp(eval_pred):
 def preprocess_logits_for_metrics(logits, labels):
     # Logits have shape e.g. [batch, seq_len, vocab_sz]
     labels = labels.unsqueeze(-1)
-    # breakpoint()
     labels_orig = torch.tensor(labels)
     # Padding tokens have label -100
     labels = torch.clip(labels, min=0)
@@ -133,7 +125,6 @@ def tokenize_dataset(dataset, tokenizer, args):
         # labels = torch.tensor(outputs["input_ids"])
         # TODO: process into int label
         labels = element["label"]
-        # breakpoint()
         # Ignore loss on pad tokens.
         # labels[outputs["input_ids"] == tokenizer.pad_token_id] = -100
         # labels[outputs["input_ids"] == tokenizer.pad_token_id] = -100
@@ -189,7 +180,6 @@ def get_train_dataloader_for_streaming(self):
 
 
     self.train_dataloader._get_batch_size = _get_batch_size.__get__(self.train_dataloader, streaming.StreamingDataLoader)
-    # breakpoint()
 
     assert self.train_dataset.replication is None, "Currently the dataset resuming on replication is not tested!"
 
@@ -300,11 +290,8 @@ def get_model_config(args, training_args, tokenizer):
 class EvalCallback(transformers.trainer_callback.TrainerCallback):
         
     def on_evaluate(self, args, state, control, metrics=None, **kwargs):
-        # metrics = self.trainer.evaluate()
-        # breakpoint()
-        # _add_model_perplexity(metrics)
         logger.warning(metrics)
-        # print(metrics)
+
 
         
 def setup(training_args):
@@ -386,9 +373,7 @@ def main():
         padding="max_length",
         # use_fast=args.use_fast_tokenizer,
     )
-    # breakpoint()
-    # tokenizer.add_special_tokens({'pad_token': '[PAD]'})
-    # model.resize_token_embeddings(len(tokenizer))
+
     tokenizer.pad_token = tokenizer.eos_token
     """
     tokenizer = AutoTokenizer.from_pretrained(
