@@ -3,9 +3,9 @@
 What roles do different components of the Transformer play?
 
 Our work disentangles the different trainable components with respect to different tasks, and finds that:
-* A Transformer model with *random query and weight projectors*, frozen at initialization, can perform competitively on language modeling tasks. 
+* A Transformer model with *random query and key projectors*, frozen at initialization, can perform competitively on language modeling tasks. 
 * MLPs play a crucial role in memorization, whereas attention is crucial for forming specialized circuits such as induction heads, enabling tasks such as retrieval. MLPs and attention collaborate on memorization tasks.
-* Even a model with a *completely random attention scores matrix*, can solve certain algorithmic and reasoning tasks.
+* Even a model with a *completely random, input-independent attention scores matrix*, can solve certain algorithmic and reasoning tasks.
 
 Our work takes a principled approch towards randomly initializing the frozen weights.
     
